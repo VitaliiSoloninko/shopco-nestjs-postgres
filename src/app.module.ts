@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { BrandsModule } from './brands/brands.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AppService } from './app.service';
       }),
       inject: [ConfigService],
     }),
+    BrandsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
