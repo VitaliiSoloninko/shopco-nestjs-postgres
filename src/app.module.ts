@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { BrandsModule } from './brands/brands.module';
 import { TypesModule } from './types/types.module';
 import { BrandTypesModule } from './brand-types/brand-types.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { BrandTypesModule } from './brand-types/brand-types.module';
     BrandsModule,
     TypesModule,
     BrandTypesModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
