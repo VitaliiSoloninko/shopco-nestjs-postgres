@@ -1,4 +1,12 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsToMany,
+  Column,
+  DataType,
+  Model,
+  Table,
+} from 'sequelize-typescript';
+import { BrandType } from '../../brand-types/entities/brand-type.entity';
+import { Type } from '../../types/entities/type.entity';
 
 export interface BrandAttributes {
   id: number;
@@ -16,4 +24,7 @@ export class Brand extends Model<BrandAttributes, BrandCreationAttributes> {
 
   @Column({ type: DataType.STRING, allowNull: false, unique: true })
   declare name: string;
+
+  @BelongsToMany(() => Type, () => BrandType)
+  declare types: Type[];
 }
