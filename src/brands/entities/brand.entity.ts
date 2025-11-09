@@ -2,10 +2,12 @@ import {
   BelongsToMany,
   Column,
   DataType,
+  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { BrandType } from '../../brand-types/entities/brand-type.entity';
+import { Product } from '../../products/entities/product.entity';
 import { Type } from '../../types/entities/type.entity';
 
 export interface BrandAttributes {
@@ -27,4 +29,7 @@ export class Brand extends Model<BrandAttributes, BrandCreationAttributes> {
 
   @BelongsToMany(() => Type, () => BrandType)
   declare types: Type[];
+
+  @HasMany(() => Product)
+  declare products: Product[];
 }
