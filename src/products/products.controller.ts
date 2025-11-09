@@ -25,10 +25,6 @@ import {
 } from '@nestjs/swagger';
 import { multerConfig } from './config/multer.config';
 import { CreateProductDto } from './dto/create-product.dto';
-import {
-  CreateProductInfoDto,
-  UpdateProductInfoDto,
-} from './dto/product-info.dto';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsService } from './products.service';
@@ -152,42 +148,5 @@ export class ProductsController {
   })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.remove(id);
-  }
-
-  // ProductInfo endpoints
-  @Post('info')
-  @ApiOperation({ summary: 'Add product information' })
-  @ApiResponse({
-    status: 201,
-    description: 'Product info created successfully',
-  })
-  addProductInfo(@Body() createProductInfoDto: CreateProductInfoDto) {
-    return this.productsService.addProductInfo(createProductInfoDto);
-  }
-
-  @Patch('info/:id')
-  @ApiOperation({ summary: 'Update product information' })
-  @ApiParam({ name: 'id', description: 'Product Info ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Product info updated successfully',
-  })
-  updateProductInfo(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateProductInfoDto: UpdateProductInfoDto,
-  ) {
-    return this.productsService.updateProductInfo(id, updateProductInfoDto);
-  }
-
-  @Delete('info/:id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Delete product information' })
-  @ApiParam({ name: 'id', description: 'Product Info ID' })
-  @ApiResponse({
-    status: 204,
-    description: 'Product info deleted successfully',
-  })
-  removeProductInfo(@Param('id', ParseIntPipe) id: number) {
-    return this.productsService.removeProductInfo(id);
   }
 }

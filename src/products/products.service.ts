@@ -10,13 +10,8 @@ import { Op } from 'sequelize';
 import { Brand } from '../brands/entities/brand.entity';
 import { Type } from '../types/entities/type.entity';
 import { CreateProductDto } from './dto/create-product.dto';
-import {
-  CreateProductInfoDto,
-  UpdateProductInfoDto,
-} from './dto/product-info.dto';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ProductInfo } from './entities/product-info.entity';
 import { Product } from './entities/product.entity';
 
 @Injectable()
@@ -24,8 +19,6 @@ export class ProductsService {
   constructor(
     @InjectModel(Product)
     private productModel: typeof Product,
-    @InjectModel(ProductInfo)
-    private productInfoModel: typeof ProductInfo,
     @InjectModel(Brand)
     private brandModel: typeof Brand,
     @InjectModel(Type)
@@ -108,10 +101,6 @@ export class ProductsService {
             model: Type,
             attributes: ['id', 'name'],
           },
-          {
-            model: ProductInfo,
-            attributes: ['id', 'title', 'description'],
-          },
         ],
         order: [[sortBy, sortOrder]],
         limit,
@@ -140,10 +129,6 @@ export class ProductsService {
         {
           model: Type,
           attributes: ['id', 'name'],
-        },
-        {
-          model: ProductInfo,
-          attributes: ['id', 'title', 'description'],
         },
       ],
     });
@@ -194,40 +179,6 @@ export class ProductsService {
 
     await product.update({ img: filename });
     return this.findOne(id);
-  }
-
-  // ProductInfo methods
-  async addProductInfo(
-    createProductInfoDto: CreateProductInfoDto,
-  ): Promise<ProductInfo> {
-    // Проверяем существование продукта
-    await this.findOne(createProductInfoDto.productId);
-
-    return this.productInfoModel.create(createProductInfoDto);
-  }
-
-  async updateProductInfo(
-    id: number,
-    updateProductInfoDto: UpdateProductInfoDto,
-  ): Promise<ProductInfo> {
-    const productInfo = await this.productInfoModel.findByPk(id);
-
-    if (!productInfo) {
-      throw new NotFoundException(`ProductInfo with ID ${id} not found`);
-    }
-
-    await productInfo.update(updateProductInfoDto);
-    return productInfo;
-  }
-
-  async removeProductInfo(id: number): Promise<void> {
-    const productInfo = await this.productInfoModel.findByPk(id);
-
-    if (!productInfo) {
-      throw new NotFoundException(`ProductInfo with ID ${id} not found`);
-    }
-
-    await productInfo.destroy();
   }
 
   // Utility methods

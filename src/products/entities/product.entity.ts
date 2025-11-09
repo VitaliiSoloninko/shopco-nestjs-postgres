@@ -3,13 +3,11 @@ import {
   Column,
   DataType,
   ForeignKey,
-  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { Brand } from '../../brands/entities/brand.entity';
 import { Type } from '../../types/entities/type.entity';
-import { ProductInfo } from './product-info.entity';
 
 export interface ProductAttributes {
   id: number;
@@ -85,7 +83,4 @@ export class Product extends Model<
 
   @BelongsTo(() => Brand)
   declare brand: Brand;
-
-  @HasMany(() => ProductInfo)
-  declare info: ProductInfo[];
 }
