@@ -41,7 +41,7 @@
     "sequelize": "^6.37.7",
     "sequelize-typescript": "^2.1.6",
     "swagger-ui-express": "^5.0.1",
-    "uuid": "^13.0.0"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
