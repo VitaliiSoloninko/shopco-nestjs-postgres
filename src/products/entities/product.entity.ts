@@ -14,7 +14,7 @@ export interface ProductAttributes {
   name: string;
   price: number;
   rating: number;
-  img: string;
+  img?: string | null;
   oldPrice?: number | null;
   discount?: number | null;
   typeId: number;
@@ -27,7 +27,7 @@ export interface ProductCreationAttributes {
   name: string;
   price: number;
   rating?: number;
-  img: string;
+  img?: string | null;
   oldPrice?: number | null;
   discount?: number | null;
   typeId: number;
@@ -56,8 +56,8 @@ export class Product extends Model<
   })
   declare rating: number;
 
-  @Column({ type: DataType.STRING, allowNull: false })
-  declare img: string;
+  @Column({ type: DataType.STRING, allowNull: true })
+  declare img: string | null;
 
   @Column({ type: DataType.DECIMAL(10, 2), allowNull: true })
   declare oldPrice: number | null;

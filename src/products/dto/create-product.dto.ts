@@ -14,7 +14,7 @@ import {
 export class CreateProductDto {
   @ApiProperty({
     description: 'Product name',
-    example: 'iPhone 15 Pro',
+    example: 'Black Striped T-shirt',
   })
   @IsString()
   @IsNotEmpty()
@@ -22,7 +22,7 @@ export class CreateProductDto {
 
   @ApiProperty({
     description: 'Product price in decimal format',
-    example: 999.99,
+    example: 119.99,
     minimum: 0.01,
   })
   @IsNumber({ maxDecimalPlaces: 2 })
@@ -44,17 +44,18 @@ export class CreateProductDto {
   @Type(() => Number)
   rating?: number = 0;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Product image filename',
-    example: 'iphone15pro.jpg',
+    example: 'product-1764762922133-aa85a711-f5f8-4b84-b2d7-c717e931fab8.jpg',
   })
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  img: string;
+  img?: string;
 
   @ApiPropertyOptional({
     description: 'Old price for discount calculation',
-    example: 1199.99,
+    example: 149.99,
     minimum: 0.01,
   })
   @IsOptional()
@@ -65,7 +66,7 @@ export class CreateProductDto {
 
   @ApiPropertyOptional({
     description: 'Discount percentage from 0 to 100',
-    example: 15,
+    example: 30,
     minimum: 0,
     maximum: 100,
   })
