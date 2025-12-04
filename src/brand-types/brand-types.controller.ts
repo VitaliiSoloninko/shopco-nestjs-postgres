@@ -7,12 +7,10 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { BrandTypesService } from './brand-types.service';
 import { CreateBrandTypeDto } from './dto/create-brand-type.dto';
 import { UpdateBrandTypeDto } from './dto/update-brand-type.dto';
-
-@ApiTags('Brand-Types')
 @Controller('api/brand-types')
 export class BrandTypesController {
   constructor(private readonly brandTypesService: BrandTypesService) {}

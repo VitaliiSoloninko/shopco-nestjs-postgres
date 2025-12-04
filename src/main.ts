@@ -34,9 +34,16 @@ async function bootstrap() {
     .setDescription('E-commerce API built with NestJS and PostgreSQL')
     .setVersion('1.0')
     .addBearerAuth()
+    .addTag('Brands', 'Brand management endpoints')
+    .addTag('Types', 'Type management endpoints')
+    .addTag('Products', 'Product management endpoints')
+    .addTag('Users', 'User management endpoints')
+    .addTag('Authentication', 'Authentication endpoints')
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config, {
+    operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
+  });
   SwaggerModule.setup('api/docs', app, document);
 
   const port = configService.get<number>('PORT') || 3000;
