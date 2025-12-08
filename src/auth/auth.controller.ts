@@ -17,13 +17,13 @@ import {
 import { User } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';
 import { GetUser } from './decorators/get-user.decorator';
-import { AuthResponseDto } from './dto/auth-response.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { TokenResponseDto } from './dto/token-response.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('Authentication')
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -35,7 +35,7 @@ export class AuthController {
   @ApiResponse({
     status: 201,
     description: 'User successfully registered',
-    type: AuthResponseDto,
+    type: TokenResponseDto,
   })
   @ApiResponse({
     status: 409,
@@ -48,7 +48,7 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   register(
     @Body(ValidationPipe) registerDto: RegisterDto,
-  ): Promise<AuthResponseDto> {
+  ): Promise<TokenResponseDto> {
     return this.authService.register(registerDto);
   }
 
@@ -60,14 +60,14 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'User successfully logged in',
-    type: AuthResponseDto,
+    type: TokenResponseDto,
   })
   @ApiResponse({
     status: 401,
     description: 'Invalid credentials',
   })
   @HttpCode(HttpStatus.OK)
-  login(@Body(ValidationPipe) loginDto: LoginDto): Promise<AuthResponseDto> {
+  login(@Body(ValidationPipe) loginDto: LoginDto): Promise<TokenResponseDto> {
     return this.authService.login(loginDto);
   }
 
