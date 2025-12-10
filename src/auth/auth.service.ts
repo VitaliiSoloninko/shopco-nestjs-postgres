@@ -5,10 +5,12 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { TokenResponseDto } from './dto/token-response.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Injectable()
 export class AuthService {
@@ -74,11 +76,30 @@ export class AuthService {
     };
   }
 
-  async validateUser(userId: number): Promise<any> {
+  async validateUser(userId: number): Promise<User | null> {
     const user = await this.usersService.findOne(userId);
     if (user) {
       return user;
     }
     return null;
+  }
+
+  async updateProfile(
+    userId: number,
+    updateProfileDto: UpdateProfileDto,
+  ): Promise<User> {
+    return this.usersService.update(userId, updateProfileDto);
+  }
+
+  async changePassword(
+    userId: number,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<User> {
+    return this.usersService.changePassword(
+      userId,
+      currentPassword,
+      newPassword,
+    );
   }
 }

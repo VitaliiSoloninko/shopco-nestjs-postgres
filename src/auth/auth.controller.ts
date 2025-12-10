@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Patch,
   Post,
   UseGuards,
   ValidationPipe,
@@ -14,12 +15,15 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { UserResponseDto } from '../users/dto/user-response.dto';
 import { User } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';
 import { GetUser } from './decorators/get-user.decorator';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { TokenResponseDto } from './dto/token-response.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('Authentication')
@@ -79,6 +83,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'User profile retrieved successfully',
+    type: UserResponseDto,
   })
   @ApiResponse({
     status: 401,
@@ -88,5 +93,72 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   getProfile(@GetUser() user: User) {
     return user;
+  }
+
+  @Patch('profile')
+  @ApiOperation({
+    summary: 'Update user profile',
+    description: 'Updates authenticated user profile information',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'User profile updated successfully',
+    type: UserResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input data',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - invalid or missing token',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'User with this email already exists',
+  })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  async updateProfile(
+    @GetUser() user: User,
+    @Body(ValidationPipe) updateProfileDto: UpdateProfileDto,
+  ) {
+    return this.authService.updateProfile(user.id, updateProfileDto);
+  }
+
+  @Post('change-password')
+  @ApiOperation({
+    summary: 'Change user password',
+    description: 'Changes authenticated user password',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Password changed successfully',
+    type: UserResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input data',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - invalid or missing token',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Current password is incorrect',
+  })
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  async changePassword(
+    @GetUser() user: User,
+    @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
+  ) {
+    return this.authService.changePassword(
+      user.id,
+      changePasswordDto.currentPassword,
+      changePasswordDto.newPassword,
+    );
   }
 }

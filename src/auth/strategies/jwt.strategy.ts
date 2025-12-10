@@ -5,6 +5,13 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { User } from 'src/users/entities/user.entity';
 import { AuthService } from '../auth.service';
 
+interface JwtPayload {
+  id: number;
+  email: string;
+  role: string;
+  firstName: string;
+}
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
@@ -20,9 +27,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-    const user: User = await this.authService.validateUser(payload.sub);
+  async validate(payload: JwtPayload): Promise<User> {
+    // Use 'id' instead of 'sub' since that's what we put in the token
+    const user = await this.authService.validateUser(payload.id);
     if (!user) {
       throw new UnauthorizedException();
     }
