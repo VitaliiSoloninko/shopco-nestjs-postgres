@@ -45,7 +45,14 @@ export class Product extends Model<
   @Column({ type: DataType.STRING, allowNull: false })
   declare name: string;
 
-  @Column({ type: DataType.DECIMAL(10, 2), allowNull: false })
+  @Column({
+    type: DataType.DECIMAL(10, 2),
+    allowNull: false,
+    get() {
+      const value = this.getDataValue('price') as string | number;
+      return typeof value === 'string' ? parseFloat(value) : value;
+    },
+  })
   declare price: number;
 
   @Column({
@@ -53,13 +60,24 @@ export class Product extends Model<
     allowNull: false,
     defaultValue: 0,
     validate: { min: 0, max: 5 },
+    get() {
+      const value = this.getDataValue('rating') as string | number;
+      return typeof value === 'string' ? parseFloat(value) : value;
+    },
   })
   declare rating: number;
 
   @Column({ type: DataType.STRING, allowNull: true })
   declare img: string | null;
 
-  @Column({ type: DataType.DECIMAL(10, 2), allowNull: true })
+  @Column({
+    type: DataType.DECIMAL(10, 2),
+    allowNull: true,
+    get() {
+      const value = this.getDataValue('oldPrice') as string | number | null;
+      return value && typeof value === 'string' ? parseFloat(value) : value;
+    },
+  })
   declare oldPrice: number | null;
 
   @Column({
