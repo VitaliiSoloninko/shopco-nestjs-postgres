@@ -2,8 +2,15 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
 
 export const GetUser = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext) => {
+  (data: string | undefined, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest<{ user: User }>();
-    return request.user;
+    const user = request.user;
+
+    if (!data) {
+      return user;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return user?.[data as keyof User];
   },
 );
