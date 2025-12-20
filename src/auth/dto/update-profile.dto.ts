@@ -59,4 +59,12 @@ export class UpdateProfileDto {
   @IsOptional()
   @IsString()
   country?: string;
+
+  @ApiPropertyOptional({
+    example: '+1234567890',
+    description: 'User phone number',
+  })
+  @IsOptional()
+  @IsString()
+  phone?: string;
 }

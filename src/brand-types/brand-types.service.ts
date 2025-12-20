@@ -40,7 +40,7 @@ export class BrandTypesService {
       if (err instanceof ConflictException) {
         throw err;
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
       throw new BadRequestException(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         err.message || 'Failed to create brand-type relationship',

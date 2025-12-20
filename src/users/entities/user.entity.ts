@@ -10,6 +10,7 @@ export interface UserAttributes {
   city?: string;
   postalCode?: string;
   country?: string;
+  phone?: string;
   role: string;
   isActive: boolean;
   createdAt?: Date;
@@ -25,6 +26,7 @@ export interface UserCreationAttributes {
   city?: string;
   postalCode?: string;
   country?: string;
+  phone?: string;
   role?: string;
 }
 
@@ -56,6 +58,9 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
 
   @Column({ type: DataType.STRING, allowNull: true })
   declare country: string;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  declare phone: string;
 
   @Column({ type: DataType.STRING, allowNull: false, defaultValue: 'user' })
   declare role: string;
