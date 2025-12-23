@@ -59,6 +59,14 @@ export class UpdateUserDto {
   country?: string;
 
   @ApiPropertyOptional({
+    example: '+1234567890',
+    description: 'User phone number',
+  })
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @ApiPropertyOptional({
     example: 'admin',
     description: 'User role (user, admin)',
   })
