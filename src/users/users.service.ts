@@ -76,7 +76,24 @@ export class UsersService {
     }
 
     try {
-      await user.update(updateUserDto);
+      // Handle null values for refreshToken separately
+      if (
+        'refreshToken' in updateUserDto &&
+        updateUserDto.refreshToken === null
+      ) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        await user.update({ refreshToken: null } as any);
+        // Remove refreshToken from updateUserDto to avoid type conflict
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { refreshToken: _, ...rest } = updateUserDto;
+        if (Object.keys(rest).length > 0) {
+          await user.update(rest);
+        }
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        await user.update(updateUserDto as any);
+      }
+
       // Return updated user without password
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: _, ...userWithoutPassword } = user.toJSON();

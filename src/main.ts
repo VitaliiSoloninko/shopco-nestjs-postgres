@@ -3,11 +3,15 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
 import { join } from 'path';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // Cookie parser middleware
+  app.use(cookieParser());
 
   // Serve static files for uploaded images
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
@@ -25,8 +29,13 @@ async function bootstrap() {
     }),
   );
 
-  // CORS
-  app.enableCors();
+  // CORS - configured for credentials (cookies)
+  app.enableCors({
+    origin: 'http://localhost:4200', // Your frontend origin
+    credentials: true, // Allow cookies
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
 
   // Swagger configuration
   const config = new DocumentBuilder()

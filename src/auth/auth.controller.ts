@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Patch,
   Post,
+  Res,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -15,6 +16,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import type { Response } from 'express';
 import { UserResponseDto } from '../users/dto/user-response.dto';
 import { User } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';
@@ -25,6 +27,7 @@ import { RegisterDto } from './dto/register.dto';
 import { TokenResponseDto } from './dto/token-response.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { JwtRefreshAuthGuard } from './guards/jwt-refresh-auth.guard';
 
 @ApiTags('Authentication')
 @Controller('api/auth')
@@ -34,7 +37,7 @@ export class AuthController {
   @Post('register')
   @ApiOperation({
     summary: 'Register new user',
-    description: 'Creates a new user account and returns JWT token',
+    description: 'Creates a new user account and returns JWT tokens',
   })
   @ApiResponse({
     status: 201,
@@ -50,16 +53,28 @@ export class AuthController {
     description: 'Invalid input data',
   })
   @HttpCode(HttpStatus.CREATED)
-  register(
+  async register(
     @Body(ValidationPipe) registerDto: RegisterDto,
-  ): Promise<TokenResponseDto> {
-    return this.authService.register(registerDto);
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ access_token: string }> {
+    const tokens = await this.authService.register(registerDto);
+
+    // Set refresh token in httpOnly cookie
+    res.cookie('refreshToken', tokens.refresh_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    });
+
+    // Return only access token
+    return { access_token: tokens.access_token };
   }
 
   @Post('login')
   @ApiOperation({
     summary: 'User login',
-    description: 'Authenticates user and returns JWT token',
+    description: 'Authenticates user and returns JWT tokens',
   })
   @ApiResponse({
     status: 200,
@@ -71,8 +86,84 @@ export class AuthController {
     description: 'Invalid credentials',
   })
   @HttpCode(HttpStatus.OK)
-  login(@Body(ValidationPipe) loginDto: LoginDto): Promise<TokenResponseDto> {
-    return this.authService.login(loginDto);
+  async login(
+    @Body(ValidationPipe) loginDto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ access_token: string }> {
+    const tokens = await this.authService.login(loginDto);
+
+    // Set refresh token in httpOnly cookie
+    res.cookie('refreshToken', tokens.refresh_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    });
+
+    // Return only access token
+    return { access_token: tokens.access_token };
+  }
+
+  @Post('logout')
+  @ApiOperation({
+    summary: 'User logout',
+    description: 'Logs out user and clears refresh token',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'User successfully logged out',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - invalid or missing token',
+  })
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  async logout(
+    @GetUser() user: User,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ message: string }> {
+    await this.authService.logout(user.id);
+
+    // Clear refresh token cookie
+    res.clearCookie('refreshToken');
+
+    return { message: 'Logged out successfully' };
+  }
+
+  @Post('refresh')
+  @ApiOperation({
+    summary: 'Refresh tokens',
+    description: 'Generates new access and refresh tokens',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Tokens refreshed successfully',
+    type: TokenResponseDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Invalid refresh token',
+  })
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtRefreshAuthGuard)
+  async refresh(
+    @GetUser() user: User,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ access_token: string }> {
+    const tokens = await this.authService.refreshTokens(user.id);
+
+    // Set new refresh token in httpOnly cookie
+    res.cookie('refreshToken', tokens.refresh_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    });
+
+    // Return only access token
+    return { access_token: tokens.access_token };
   }
 
   @Get('profile')

@@ -81,4 +81,11 @@ export class UpdateUserDto {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Hashed refresh token',
+  })
+  @IsOptional()
+  @IsString()
+  refreshToken?: string | null;
 }

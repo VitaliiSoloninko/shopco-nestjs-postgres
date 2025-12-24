@@ -13,6 +13,7 @@ export interface UserAttributes {
   phone?: string;
   role: string;
   isActive: boolean;
+  refreshToken?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -67,4 +68,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
 
   @Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: false })
   declare isActive: boolean;
+
+  @Column({ type: DataType.TEXT, allowNull: true })
+  declare refreshToken: string;
 }
