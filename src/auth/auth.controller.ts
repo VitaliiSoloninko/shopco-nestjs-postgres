@@ -62,8 +62,8 @@ export class AuthController {
     // Set refresh token in httpOnly cookie
     res.cookie('refreshToken', tokens.refresh_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: false, // false для dev без HTTPS
+      sameSite: 'none', // 'none' для работы без прокси в dev
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
 
@@ -95,8 +95,8 @@ export class AuthController {
     // Set refresh token in httpOnly cookie
     res.cookie('refreshToken', tokens.refresh_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: false, // false для dev без HTTPS
+      sameSite: 'none', // 'none' для работы без прокси в dev
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
 
@@ -157,8 +157,8 @@ export class AuthController {
     // Set new refresh token in httpOnly cookie
     res.cookie('refreshToken', tokens.refresh_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: false, // false для dev без HTTPS
+      sameSite: 'none', // 'none' для работы без прокси в dev
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
 
