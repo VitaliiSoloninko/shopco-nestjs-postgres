@@ -26,7 +26,7 @@ import { OrderResponseDto } from './dto/order-response.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrdersService } from './orders.service';
 
-@ApiTags('Orders')
+@ApiTags('User - Orders')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('api/orders')
@@ -35,7 +35,7 @@ export class OrdersController {
 
   @Post()
   @ApiOperation({
-    summary: 'Create new order',
+    summary: 'Create new USERorder',
     description: 'Creates order from cart items and clears the cart',
   })
   @ApiResponse({
@@ -61,7 +61,7 @@ export class OrdersController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get all user orders',
+    summary: 'Get all USER orders',
     description: 'Returns all orders for the authenticated user',
   })
   @ApiResponse({
@@ -79,7 +79,7 @@ export class OrdersController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Get order by ID',
+    summary: 'Get USER order by ID',
     description: 'Returns specific order details',
   })
   @ApiResponse({
@@ -104,7 +104,7 @@ export class OrdersController {
 
   @Patch(':id')
   @ApiOperation({
-    summary: 'Update order status',
+    summary: 'Update USER order status',
     description: 'Updates order status (admin only in production)',
   })
   @ApiResponse({
@@ -130,7 +130,7 @@ export class OrdersController {
 
   @Delete(':id')
   @ApiOperation({
-    summary: 'Cancel order',
+    summary: 'Cancel USER order',
     description: 'Cancels pending order',
   })
   @ApiResponse({

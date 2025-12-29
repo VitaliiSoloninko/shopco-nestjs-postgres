@@ -127,10 +127,34 @@ export class OrdersService {
     return orders.map((order) => this.formatOrderResponse(order, order.items));
   }
 
+  // Admin: Get all orders from all users
+  async findAllForAdmin(): Promise<OrderResponseDto[]> {
+    const orders = await this.orderModel.findAll({
+      include: [OrderItem, User],
+      order: [['createdAt', 'DESC']],
+    });
+
+    return orders.map((order) => this.formatOrderResponse(order, order.items));
+  }
+
   async findOne(id: number, userId: number): Promise<OrderResponseDto> {
     const order = await this.orderModel.findOne({
       where: { id, userId },
       include: [OrderItem],
+    });
+
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    return this.formatOrderResponse(order, order.items);
+  }
+
+  // Admin: Get any order by ID
+  async findOneForAdmin(id: number): Promise<OrderResponseDto> {
+    const order = await this.orderModel.findOne({
+      where: { id },
+      include: [OrderItem, User],
     });
 
     if (!order) {
@@ -148,6 +172,26 @@ export class OrdersService {
     const order = await this.orderModel.findOne({
       where: { id, userId },
     });
+
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    await order.update(updateOrderDto);
+
+    const items = await this.orderItemModel.findAll({
+      where: { orderId: order.id },
+    });
+
+    return this.formatOrderResponse(order, items);
+  }
+
+  // Admin: Update any order
+  async updateForAdmin(
+    id: number,
+    updateOrderDto: UpdateOrderDto,
+  ): Promise<OrderResponseDto> {
+    const order = await this.orderModel.findByPk(id);
 
     if (!order) {
       throw new NotFoundException('Order not found');
