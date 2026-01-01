@@ -4,12 +4,32 @@ import { IsEnum, IsOptional } from 'class-validator';
 export class UpdateOrderDto {
   @ApiPropertyOptional({
     example: 'processing',
-    enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+    enum: [
+      'pending',
+      'confirmed',
+      'processing',
+      'shipped',
+      'delivered',
+      'cancelled',
+    ],
     description: 'Order status',
   })
   @IsOptional()
-  @IsEnum(['pending', 'processing', 'shipped', 'delivered', 'cancelled'])
-  status?: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  @IsEnum([
+    'pending',
+    'confirmed',
+    'processing',
+    'shipped',
+    'delivered',
+    'cancelled',
+  ])
+  status?:
+    | 'pending'
+    | 'confirmed'
+    | 'processing'
+    | 'shipped'
+    | 'delivered'
+    | 'cancelled';
 
   @ApiPropertyOptional({
     example: 'paid',

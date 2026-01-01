@@ -35,7 +35,7 @@ export class OrdersController {
 
   @Post()
   @ApiOperation({
-    summary: 'Create new USERorder',
+    summary: 'Create new USER order',
     description: 'Creates order from cart items and clears the cart',
   })
   @ApiResponse({

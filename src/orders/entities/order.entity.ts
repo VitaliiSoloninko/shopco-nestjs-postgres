@@ -13,7 +13,13 @@ export interface OrderAttributes {
   id: number;
   userId: number;
   orderNumber: string;
-  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  status:
+    | 'pending'
+    | 'confirmed'
+    | 'processing'
+    | 'shipped'
+    | 'delivered'
+    | 'cancelled';
   paymentMethod: string;
   paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
   totalAmount: number;
@@ -37,7 +43,13 @@ export interface OrderAttributes {
 export interface OrderCreationAttributes {
   userId: number;
   orderNumber: string;
-  status?: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  status?:
+    | 'pending'
+    | 'confirmed'
+    | 'processing'
+    | 'shipped'
+    | 'delivered'
+    | 'cancelled';
   paymentMethod: string;
   paymentStatus?: 'pending' | 'paid' | 'failed' | 'refunded';
   totalAmount: number;
@@ -70,6 +82,7 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> {
   @Column({
     type: DataType.ENUM(
       'pending',
+      'confirmed',
       'processing',
       'shipped',
       'delivered',
@@ -80,6 +93,7 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> {
   })
   declare status:
     | 'pending'
+    | 'confirmed'
     | 'processing'
     | 'shipped'
     | 'delivered'
