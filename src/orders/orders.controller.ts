@@ -105,7 +105,8 @@ export class OrdersController {
   @Patch(':id')
   @ApiOperation({
     summary: 'Update USER order status',
-    description: 'Updates order status (admin only in production)',
+    description:
+      'pending, confirmed, processing, shipped, delivered, cancelled (admin only in production)',
   })
   @ApiResponse({
     status: 200,

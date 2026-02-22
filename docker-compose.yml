@@ -12,9 +12,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  shopco_app:
+  shopco_nest:
     build: .
-    container_name: shopco_app
+    container_name: shopco_nest
     restart: unless-stopped
     environment:
       - NODE_ENV=production
@@ -25,6 +25,7 @@ services:
       - DB_HOST=shopco_postgres
       - DB_PORT=5432
       - JWT_SECRET=vitalii_jwt_secret_key
+      - JWT_REFRESH_SECRET=your_production_refresh_secret_key
     ports:
       - '5008:5008'
     volumes:
