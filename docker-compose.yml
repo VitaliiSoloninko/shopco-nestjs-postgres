@@ -1,17 +1,4 @@
 services:
-  shopco_postgres:
-    image: postgres:18-alpine
-    container_name: shopco_postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: shopco_postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - '5440:5432'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
   shopco_nest:
     build: .
     container_name: shopco_nest
@@ -21,17 +8,30 @@ services:
       - PORT=5008
       - DB_NAME=shopco_postgres
       - DB_USER=postgres
-      - DB_PASSWORD=postgres
+      - DB_PASSWORD=WkBME5bdzrNtagqjuvLs
       - DB_HOST=shopco_postgres
-      - DB_PORT=5432
-      - JWT_SECRET=vitalii_jwt_secret_key
-      - JWT_REFRESH_SECRET=your_production_refresh_secret_key
+      - DB_PORT=5433
+      - JWT_SECRET=c5FEEWoti8rjAYNaULGB
+      - JWT_REFRESH_SECRET=QqbjYfXnf60B5rQkVXyW
     ports:
-      - '5008:5008'
+      - '5001:5001'
     volumes:
       - ./uploads:/app/uploads
     depends_on:
       - shopco_postgres
 
+  shopco_postgres:
+    image: postgres:18-alpine
+    container_name: shopco_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: shopco_postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: WkBME5bdzrNtagqjuvLs
+    ports:
+      - '5433:5432'
+    volumes:
+      - shop_postgres_data:/var/lib/postgresql/data
+
 volumes:
-  postgres_data:
+  shop_postgres_data:
