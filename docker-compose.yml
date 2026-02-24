@@ -10,7 +10,7 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=WkBME5bdzrNtagqjuvLs
       - DB_HOST=shopco_postgres
-      - DB_PORT=5433
+      - DB_PORT=5432
       - JWT_SECRET=c5FEEWoti8rjAYNaULGB
       - JWT_REFRESH_SECRET=QqbjYfXnf60B5rQkVXyW
     ports:
