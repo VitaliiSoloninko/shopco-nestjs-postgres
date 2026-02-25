@@ -19,7 +19,7 @@ RUN npm run build
 RUN mkdir -p uploads/products
 
 # Expose the port
-EXPOSE 5008
+EXPOSE 5001
 
 # Start the application
 CMD ["node", "dist/main.js"]

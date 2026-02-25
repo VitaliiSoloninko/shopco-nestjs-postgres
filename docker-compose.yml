@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
-      - PORT=5008
+      - PORT=5001
       - DB_NAME=shopco_postgres
       - DB_USER=postgres
       - DB_PASSWORD=WkBME5bdzrNtagqjuvLs
@@ -29,9 +29,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: WkBME5bdzrNtagqjuvLs
     ports:
-      - '5433:5432'
+      - '5435:5432'
     volumes:
-      - shop_postgres_data:/var/lib/postgresql/data
+      - shopco_postgres_data:/var/lib/postgresql/data
 
 volumes:
-  shop_postgres_data:
+  shopco_postgres_data:
