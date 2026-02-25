@@ -31,7 +31,7 @@ async function bootstrap() {
 
   // CORS - configured for credentials (cookies)
   app.enableCors({
-    origin: 'http://localhost:4200', // Your frontend origin
+    origin: ['http://localhost:4200', 'https://shopco-laden.web.app'], // Allowed frontend origins
     credentials: true, // Allow cookies
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
